@@ -51,22 +51,22 @@ shinyUI(pageWithSidebar(
 		conditionalPanel(
 			condition = "input.phase == 'preprocess'",
 			wellPanel(tags$strong("Pre-processing Corpus"),
-#			checkboxInput("punctuation", "Remove Punctuation", FALSE),
-#			checkboxInput("numbers", "Remove Numbers", FALSE),
-#			checkboxInput("stemming", "Stem Words", FALSE),
-#			checkboxInput("stopwords", "Remove Stopwords", FALSE),
-#			checkboxInput("customStopword", "Use Custom Stopwords", FALSE),
-#			conditionalPanel(
-#				condition = "input.customStopword",
-#				textInput("cusStopwords", "Please enter your stopwords separated by comma")
-#					),
-#			checkboxInput("customThes", "Use Custom Thesauri", FALSE),
-#			conditionalPanel(
-#				condition = "input.customThes",
-#				textInput("customThesInitial", "Please enter words separated by comma"),
-#				textInput("customThesReplacement", "Enter Replacement words separated by a comma")
-#					),
-#			br(),
+			checkboxInput("punctuation", "Remove Punctuation", FALSE),
+			checkboxInput("numbers", "Remove Numbers", FALSE),
+			checkboxInput("stemming", "Stem Words", FALSE),
+			checkboxInput("stopwords", "Remove Stopwords", FALSE),
+			checkboxInput("customStopword", "Use Custom Stopwords", FALSE),
+			conditionalPanel(
+				condition = "input.customStopword",
+				textInput("cusStopwords", "Please enter your stopwords separated by comma")
+					),
+			checkboxInput("customThes", "Use Custom Thesauri", FALSE),
+			conditionalPanel(
+				condition = "input.customThes",
+				textInput("customThesInitial", "Please enter words separated by comma"),
+				textInput("customThesReplacement", "Enter Replacement words separated by a comma")
+					),
+			br(),
 			actionButton("preprocessBtn", "Apply Pre-processing")
 				)
 			),
