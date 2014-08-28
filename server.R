@@ -5,6 +5,7 @@ require(shiny)
 require(shinyIncubator)
 require(tm)
 require(RCurl)
+require(SnowballC)
 
 
 
@@ -13,71 +14,72 @@ require(RCurl)
 #========================= Load required functions in global scope to be used anywhere in the App ======================================
 
 
-#cleanSweepCorpus<- function(corpus, useStopwords=FALSE, stem=FALSE, removePunct=FALSE, removeNum=FALSE, useSynonyms=FALSE,
-#			    initialWords, replacementWords, useCustomStopwords=FALSE, customStopwords){
-#  newCorpus <- corpus
-#  newCorpus <- sapply(newCorpus, function(x) tolower(x))
-#  newCorpus <- gsub("[\\\\()/]", " ", newCorpus)
-#  if (useStopwords != FALSE){
-#	engStopwords <- c(stopwords("SMART"),stopwords("english"))
-#	engStopwords <- gsub("^","\\\\b",engStopwords)
-#	engStopwords <- gsub("$","\\\\b",engStopwords)
-#	x <- mapply(FUN= function(...){
-#		newCorpus <<- gsub(..., replacement=" ", x=newCorpus)},
-#		pattern=engStopwords)
-#	rm(x)
-#  }
-#  if (useCustomStopwords != FALSE){
-#	stopwords <- unlist(strsplit(customStopwords, split=","))
-#	#Encoding(stopwordsList) <- "UTF-8"
-#	modifiedStopwords <- gsub("^[[:space:]]*", "\\\\b", stopwords)
-#	modifiedStopwords <- gsub("[[:space:]]*$", "\\\\b", modifiedStopwords)
-#	x <- mapply(FUN= function(...){
-#		newCorpus <<- gsub(..., replacement=" ", x=newCorpus)},
-#		pattern=modifiedStopwords)
-#	rm(x)
-#  }
-#  if (useSynonyms != FALSE){
-#	toChange <- unlist(strsplit(initialWords, split=","))
-#	changeTo <- unlist(strsplit(replacementWords, split=","))
-#	#Encoding(toChange)<- "UTF-8"
-#	#Encoding(changeTo)<- "UTF-8"
-#	toChangeWords <- gsub("^[[:space:]]*", "\\\\b", toChange)
-#	toChangeWords <- gsub("[[:space:]]*$", "\\\\b", toChangeWords)
-#	changeToWords <- gsub("^[[:space:]]*", "\\\\b", changeTo)
-#	changeTowords <- gsub("[[:space:]]*$", "\\\\b", changeToWords)
-#	if (length(toChangeWords) == length(changeToWords)){
-#		x <- mapply(FUN= function(...){
-#		newCorpus <<- gsub(..., x=newCorpus)},
-#		pattern=toChangeWords, replacement=changeToWords)
-#		rm(x)
-#	} else {
-#		print("It appears that the number of replacing and to be replaced words are not the same...")
-#	}
-#  }
-#  if (removePunct != FALSE){
-#	newCorpus <- gsub("[[:punct:]]", " ", newCorpus)
-#  }
-#  if (removeNum != FALSE){
-#	newCorpus <- gsub("[[:digit:]]", " ", newCorpus)
-#  }
-#  newCorpus <- stripWhitespace(newCorpus)
-#  newCorpus <- gsub("^[[:space:]]*", "", newCorpus)
-#  newCorpus <- gsub("[[:space:]]*$", "", newCorpus)
-#  newCorpus <- gsub("[^[:alnum:]]", " ", newCorpus)
-#  finalCorpus <- Corpus(VectorSource(newCorpus))
-#  if (stem != FALSE){
-#	finalCorpus <- tm_map(finalCorpus, stemDocument)
-#  }
-#  finalCorpus <- tm_map(finalCorpus, stripWhitespace)
-#  return(finalCorpus)
-#}
+cleanSweepCorpus<- function(corpus, useStopwords=FALSE, stem=FALSE, removePunct=FALSE, removeNum=FALSE, useSynonyms=FALSE,
+			    initialWords, replacementWords, useCustomStopwords=FALSE, customStopwords){
+  newCorpus <- corpus
+  newCorpus <- sapply(newCorpus, function(x) tolower(x))
+  newCorpus <- gsub("[\\\\()/]", " ", newCorpus)
+  if (useStopwords != FALSE){
+	engStopwords <- c(stopwords("SMART"),stopwords("english"))
+	engStopwords <- gsub("^","\\\\b",engStopwords)
+	engStopwords <- gsub("$","\\\\b",engStopwords)
+	x <- mapply(FUN= function(...){
+		newCorpus <<- gsub(..., replacement=" ", x=newCorpus)},
+		pattern=engStopwords)
+	rm(x)
+  }
+  if (useCustomStopwords != FALSE){
+	stopwords <- unlist(strsplit(customStopwords, split=","))
+	#Encoding(stopwordsList) <- "UTF-8"
+	modifiedStopwords <- gsub("^[[:space:]]*", "\\\\b", stopwords)
+	modifiedStopwords <- gsub("[[:space:]]*$", "\\\\b", modifiedStopwords)
+	x <- mapply(FUN= function(...){
+		newCorpus <<- gsub(..., replacement=" ", x=newCorpus)},
+		pattern=modifiedStopwords)
+	rm(x)
+  }
+  if (useSynonyms != FALSE){
+	toChange <- unlist(strsplit(initialWords, split=","))
+	changeTo <- unlist(strsplit(replacementWords, split=","))
+	#Encoding(toChange)<- "UTF-8"
+	#Encoding(changeTo)<- "UTF-8"
+	toChangeWords <- gsub("^[[:space:]]*", "\\\\b", toChange)
+	toChangeWords <- gsub("[[:space:]]*$", "\\\\b", toChangeWords)
+	changeToWords <- gsub("^[[:space:]]*", "\\\\b", changeTo)
+	changeTowords <- gsub("[[:space:]]*$", "\\\\b", changeToWords)
+	if (length(toChangeWords) == length(changeToWords)){
+		x <- mapply(FUN= function(...){
+		newCorpus <<- gsub(..., x=newCorpus)},
+		pattern=toChangeWords, replacement=changeToWords)
+		rm(x)
+	} else {
+		print("It appears that the number of replacing and to be replaced words are not the same...")
+	}
+  }
+  if (removePunct != FALSE){
+	newCorpus <- gsub("[[:punct:]]", " ", newCorpus)
+  }
+  if (removeNum != FALSE){
+	newCorpus <- gsub("[[:digit:]]", " ", newCorpus)
+  }
+  newCorpus <- stripWhitespace(newCorpus)
+  newCorpus <- gsub("^[[:space:]]*", "", newCorpus)
+  newCorpus <- gsub("[[:space:]]*$", "", newCorpus)
+  newCorpus <- gsub("[^[:alnum:]]", " ", newCorpus)
+  newCorpus <- newCorpus[which(newCorpus != "")]
+  if (stem != FALSE){
+	newCorpus <- sapply(newCorpus, wordStem)
+  }
+  finalCorpus <- Corpus(VectorSource(newCorpus))
+  finalCorpus <- tm_map(finalCorpus, stripWhitespace)
+  return(finalCorpus)
+}
 
 
 #======= Cosine similarity function for checking document similarity
-#
-#cosineDist<- function(x){
-#x %*% t(x) / sqrt(rowSums(x^2) %*% t(rowSums(x^2))) }
+
+cosineDist<- function(x){
+x %*% t(x) / sqrt(rowSums(x^2) %*% t(rowSums(x^2))) }
 
 
 
@@ -140,14 +142,14 @@ shinyServer(function(input, output, session){
 				return()
 				isolate ({
 					originalCorpus <- initialCorpus()
-#					newCorpus <- cleanSweepCorpus(corpus=originalCorpus, useStopwords=input$stopwords, stem=input$stemming,
-#							removePunct=input$punctuation, removeNum=input$numbers,
-#							useSynonyms=input$customThes, initialWords=input$customThesInitial,
-#							replacementWords=input$customThesReplacement, 													useCustomStopwords=input$customStopword,
-#							customStopwords=input$cusStopwords)
+					newCorpus <- cleanSweepCorpus(corpus=originalCorpus, useStopwords=input$stopwords, stem=input$stemming,
+							removePunct=input$punctuation, removeNum=input$numbers,
+							useSynonyms=input$customThes, initialWords=input$customThesInitial,
+							replacementWords=input$customThesReplacement, 													useCustomStopwords=input$customStopword,
+							customStopwords=input$cusStopwords)
 #					rm(originalCorpus)
 #					return(newCorpus)
-					return(originalCorpus)
+					return(unname(unlist(newCorpus)[names(unlist(newCorpus)) == 'content.content']))
 			})
 	})
 
