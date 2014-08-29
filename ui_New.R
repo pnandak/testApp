@@ -23,7 +23,7 @@ sidebarPanel(tags$h4("Phase Selection"),
 				"1. Importing Corpus" = "import",
 				"2. Pre-processing" = "preprocess",
 				"3. Feature Generation" = "featureGenerate",
-				"4. Feature Selection" = "featureSelect"), 
+				"4. Feature Selection" = "featureSelect", 
 				"About" = "about"),
 				selected = "userGuide"),
 
@@ -39,13 +39,13 @@ sidebarPanel(tags$h4("Phase Selection"),
 					condition = "input.corpusType == 'userCorpus'",
 					fileInput("userPath", "", multiple=TRUE)
 					),
-				conditionalPanel(
-					condition = "input.corpusType == 'sampleCorpus'",
-					radioButtons("choiceCorpus", "Select sample Corpus:",
-					c("UAE Expat Forum" = "UAEexpatForum",
-				  	"UAE Trip Advisor" = "UAEtripAdvisor",
-				  	"Middle East Politics" = "middleEastPolitics"))
-					),
+#				conditionalPanel(
+#					condition = "input.corpusType == 'sampleCorpus'",
+#					radioButtons("choiceCorpus", "Select sample Corpus:",
+#					c("UAE Expat Forum" = "UAEexpatForum",
+#				  	"UAE Trip Advisor" = "UAEtripAdvisor",
+#				  	"Middle East Politics" = "middleEastPolitics"))
+#					),
 			actionButton("uploadBtn", "Upload Corpus")
 			)
 		),		
@@ -115,7 +115,8 @@ sidebarPanel(tags$h4("Phase Selection"),
 
 			actionButton("selectFeaturesBtn", "Select Features")
 			)
-		),				
+		)
+	),				
 
 
 ##================================= Select settings for mainPanel ================================================##
@@ -131,6 +132,4 @@ sidebarPanel(tags$h4("Phase Selection"),
 			tabPanel(title = "About", includeHTML("about.html"))
 			)
 		)
-	)
-)
-
+))
